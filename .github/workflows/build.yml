@@ -1,0 +1,46 @@
+name: C/C++ CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-opencv:
+    name: Build OpenCV
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: opencv/opencv
+        ref: 4.5.3
+    
+    - run: |
+        mkdir build
+        cd build
+
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX=$(realpath ../opencv4) \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DWITH_IPP=OFF \
+          -DBUILD_IPP_IW=OFF \
+          -DWITH_LAPACK=OFF \
+          -DWITH_EIGEN=OFF \
+          -DCMAKE_INSTALL_LIBDIR=lib64 \
+          -DWITH_ZLIB=ON \
+          -DBUILD_ZLIB=ON \
+          -DWITH_JPEG=ON \
+          -DBUILD_JPEG=ON \
+          -DWITH_PNG=ON \
+          -DBUILD_PNG=ON \
+          -DWITH_TIFF=ON \
+          -DBUILD_TIFF=ON
+        
+        make -j
+        make install
+
+    - uses: actions/upload-artifact@v3.1.1
+      with:
+        name: opencv
+        path: ./opencv4
