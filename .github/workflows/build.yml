@@ -15,7 +15,8 @@ jobs:
         repository: opencv/opencv
         ref: 4.5.3
     
-    - run: |
+    - name: CMake Build
+      run: |
         mkdir build
         cd build
 
@@ -37,7 +38,7 @@ jobs:
           -DWITH_TIFF=ON \
           -DBUILD_TIFF=ON
         
-        make -j
+        make -j2
         make install
 
     - uses: actions/upload-artifact@v3.1.1
