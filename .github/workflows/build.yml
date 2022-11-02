@@ -21,7 +21,7 @@ jobs:
         cd build
 
         cmake .. \
-          -DCMAKE_INSTALL_PREFIX=$(realpath ../opencv4) \
+          -DCMAKE_INSTALL_PREFIX=$(realpath ../opencv) \
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_SHARED_LIBS=OFF \
           -DWITH_IPP=OFF \
@@ -41,7 +41,57 @@ jobs:
         make -j2
         make install
 
-    - uses: actions/upload-artifact@v3.1.1
+    - uses: actions/upload-artifact@v3
       with:
         name: opencv
-        path: ./opencv4
+        path: ./opencv
+
+  build-ocr:
+    name: Build PaddleOCR
+    needs: [build-opencv]
+    
+    strategy:
+      matrix:
+        infer: 
+          - gcc8.2_avx_mkl
+          - gcc8.2_avx_openblas
+          - gcc8.2_openblas
+      
+    env:
+      INFERENCE_URL: 'https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Linux/CPU/${{ matrix.infer }}/paddle_inference.tgz'
+      WITH_MKL: '${{ contains(matrix.infer, "mkl") && "ON" || "OFF" }}'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download OpenCV
+        uses: actions/download-artifact@v3
+        with:
+          name: opencv
+          path: ./opencv
+
+      - name: Download inference library
+        run: |
+          curl -L $INFERENCE_URL > /tmp/paddle_inference.tgz
+          tar -xzv /tmp/paddle_inference.tgz
+    
+      - name: CMake Build
+        run: |
+          mkdir build
+          cd build
+          
+          cmake .. \
+            -DPADDLE_LIB=$(realpath ../paddle_inference) 
+            -DOpenCV_DIR=$(realpath ../opencv) \
+            -DWITH_STATIC_LIB=OFF \
+            -DBUILD_SHARED=ON \
+            -DWITH_MKL=$WITH_MKL
+            
+          make -j2
+      
+      - uses: actions/upload-artifact@v3
+        with:
+          name: 'paddle_${{ matrix.infer }}'
+          path: ./build
+      
