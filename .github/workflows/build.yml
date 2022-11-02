@@ -85,7 +85,7 @@ jobs:
           
           cmake .. \
             -DPADDLE_LIB=$(realpath ../paddle_inference) \
-            -DOpenCV_DIR=$(realpath ../opencv) \
+            -DOpenCV_DIR=$(realpath ../opencv/lib64/cmake/opencv4/) \
             -DWITH_STATIC_LIB=OFF \
             -DBUILD_SHARED=ON \
             -DWITH_MKL=$WITH_MKL
