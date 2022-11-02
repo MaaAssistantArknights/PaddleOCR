@@ -90,8 +90,8 @@ jobs:
           cd build
           
           cmake .. \
-            -DPADDLE_LIB=$(realpath ../paddle_inference) \
-            -DOpenCV_DIR=$(realpath ../opencv/lib64/cmake/opencv4/) \
+            -DPADDLE_LIB=$(realpath ../../../paddle_inference) \
+            -DOpenCV_DIR=$(realpath ../../../opencv/lib64/cmake/opencv4) \
             -DWITH_STATIC_LIB=OFF \
             -DBUILD_SHARED=ON \
             -DWITH_MKL=$WITH_MKL
