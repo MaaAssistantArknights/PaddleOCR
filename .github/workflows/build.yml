@@ -82,7 +82,7 @@ jobs:
           cd build
           
           cmake .. \
-            -DPADDLE_LIB=$(realpath ../paddle_inference) 
+            -DPADDLE_LIB=$(realpath ../paddle_inference) \
             -DOpenCV_DIR=$(realpath ../opencv) \
             -DWITH_STATIC_LIB=OFF \
             -DBUILD_SHARED=ON \
