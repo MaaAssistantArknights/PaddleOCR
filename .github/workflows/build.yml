@@ -38,7 +38,7 @@ jobs:
           -DWITH_TIFF=ON \
           -DBUILD_TIFF=ON
         
-        make -j4
+        make -j2
         make install
 
     - uses: actions/upload-artifact@v3
@@ -69,14 +69,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: opencv
-          path: ./opencv
+          path: ./deploy/cpp_infer/opencv
 
       - name: Download inference library
+        working-directory: ./deploy/cpp_infer/
         run: |
           curl -L $INFERENCE_URL > /tmp/paddle_inference.tgz
-          tar -xzv /tmp/paddle_inference.tgz
-    
+          tar -xzvf /tmp/paddle_inference.tgz
+
       - name: CMake Build
+        working-directory: ./deploy/cpp_infer/
         run: |
           mkdir build
           cd build
@@ -88,10 +90,9 @@ jobs:
             -DBUILD_SHARED=ON \
             -DWITH_MKL=$WITH_MKL
             
-          make -j4
-      
+          make -j2
+
       - uses: actions/upload-artifact@v3
         with:
           name: paddle_${{ matrix.infer }}
-          path: ./build
-      
+          path: ./deploy/cpp_infer/build
