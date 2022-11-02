@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./build
-          key: ${{ matrix.os }}-opencv-build
+          key: ${{ runner.os }}-opencv-build
 
       - name: CMake Build
         run: |
@@ -52,7 +52,7 @@ jobs:
           name: opencv
           path: ./opencv
 
-  build-ocr:
+  build:
     name: Build PaddleOCR
     needs: [build-opencv]
 
@@ -65,8 +65,8 @@ jobs:
 
     env:
       INFERENCE_URL: >-
-        https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Linux/CPU/
-        gcc8.2_${{ matrix.infer }}/paddle_inference.tgz
+        https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Linux
+        /CPU/gcc8.2_${{ matrix.infer }}/paddle_inference.tgz
       WITH_MKL: ${{ contains(matrix.infer, 'mkl') && 'ON' || 'OFF' }}
 
     runs-on: ubuntu-latest
