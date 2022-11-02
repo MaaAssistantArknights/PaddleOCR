@@ -38,7 +38,7 @@ jobs:
           -DWITH_TIFF=ON \
           -DBUILD_TIFF=ON
         
-        make -j2
+        make -j4
         make install
 
     - uses: actions/upload-artifact@v3
@@ -88,7 +88,7 @@ jobs:
             -DBUILD_SHARED=ON \
             -DWITH_MKL=$WITH_MKL
             
-          make -j2
+          make -j4
       
       - uses: actions/upload-artifact@v3
         with:
