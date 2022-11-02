@@ -58,8 +58,8 @@ jobs:
           - gcc8.2_openblas
       
     env:
-      INFERENCE_URL: 'https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Linux/CPU/${{ matrix.infer }}/paddle_inference.tgz'
-      WITH_MKL: '${{ contains(matrix.infer, "mkl") && "ON" || "OFF" }}'
+      INFERENCE_URL: https://paddle-inference-lib.bj.bcebos.com/2.3.2/cxx_c/Linux/CPU/${{ matrix.infer }}/paddle_inference.tgz
+      WITH_MKL: ${{ contains(matrix.infer, 'mkl') && 'ON' || 'OFF' }}
 
     runs-on: ubuntu-latest
     steps:
@@ -92,6 +92,6 @@ jobs:
       
       - uses: actions/upload-artifact@v3
         with:
-          name: 'paddle_${{ matrix.infer }}'
+          name: paddle_${{ matrix.infer }}
           path: ./build
       
